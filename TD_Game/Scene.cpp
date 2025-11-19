@@ -36,7 +36,10 @@ void Scene::Update(float deltaTime)
 
 void Scene::Draw(SDL_Renderer* renderer)
 {
-
+	for (auto& sprite : mSpriteComps)
+	{
+		sprite->Draw(renderer);
+	}
 }
 
 void Scene::Unload()
@@ -105,4 +108,14 @@ void Scene::RemoveSpriteComponent(SpriteComponent* sc)
 	{
 		mSpriteComps.erase(iter);
 	}
+}
+
+void Scene::InputActor(const uint8_t* keyState)
+{
+	mUpdatingActors = true;
+	for (auto& actor : mActors)
+	{
+		actor->ProcessInput(keyState);
+	}
+	mUpdatingActors = false;
 }

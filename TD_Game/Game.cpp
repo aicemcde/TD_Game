@@ -2,6 +2,7 @@
 #include "Actor.h"
 #include <algorithm>
 #include "Scene.h"
+#include "ResourceManger.h"
 
 Game::Game()
 	:mWindow(nullptr)
@@ -44,6 +45,7 @@ bool Game::Initialize()
 	mTicksCount = SDL_GetTicks();
 
 	mScene = std::make_unique<Scene>(this);
+	mResourceManager = std::make_unique<ResourceManager>();
 
 	LoadData();
 
@@ -53,6 +55,7 @@ bool Game::Initialize()
 void Game::Shutdown()
 {
 	UnloadData();
+	IMG_Quit();
 	SDL_DestroyRenderer(mRenderer);
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
@@ -89,6 +92,7 @@ void Game::ProcessInput()
 	{
 		mIsRunning = false;
 	}
+	mScene->InputActor(keyState);
 }
 
 void Game::UpdateGame()

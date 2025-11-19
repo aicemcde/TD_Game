@@ -26,4 +26,5 @@ private:
 	Uint32 mTicksCount;
 
 	std::unique_ptr<class Scene> mScene;
+	std::unique_ptr<class ResourceManager> mResourceManager;
 };

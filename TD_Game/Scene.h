@@ -17,6 +17,8 @@ public:
 	void AddSpriteComponent(class SpriteComponent* sc);
 	void RemoveSpriteComponent(class SpriteComponent* sc);
 
+	void InputActor(const uint8_t* keyState);
+
 private:
 	std::vector<std::unique_ptr<class Actor>> mActors;
 	std::vector<std::unique_ptr<class Actor>> mPendingActors;
