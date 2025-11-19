@@ -1,6 +1,4 @@
 #include "Game.h"
-#include "Actor.h"
-#include <algorithm>
 #include "Scene.h"
 #include "ResourceManger.h"
 

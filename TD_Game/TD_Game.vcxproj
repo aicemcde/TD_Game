@@ -127,6 +127,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="AIComponent.cpp" />
+    <ClCompile Include="AIDeath.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -137,7 +139,11 @@
     <ClCompile Include="SpriteComponent.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="A-Star_Search.h" />
     <ClInclude Include="Actor.h" />
+    <ClInclude Include="AIComponent.h" />
+    <ClInclude Include="AIDeath.h" />
+    <ClInclude Include="AIState.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="Math.h" />
