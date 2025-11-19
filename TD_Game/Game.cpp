@@ -1,9 +1,14 @@
 #include "Game.h"
+#include "Actor.h"
+#include <algorithm>
+#include "Scene.h"
 
 Game::Game()
 	:mWindow(nullptr)
 	,mIsRunning(true)
 	,mRenderer(nullptr)
+	,mScene(nullptr)
+	,mTicksCount(0)
 {
 
 }
@@ -36,11 +41,18 @@ bool Game::Initialize()
 		return false;
 	}
 
+	mTicksCount = SDL_GetTicks();
+
+	mScene = std::make_unique<Scene>(this);
+
+	LoadData();
+
 	return true;
 }
 
 void Game::Shutdown()
 {
+	UnloadData();
 	SDL_DestroyRenderer(mRenderer);
 	SDL_DestroyWindow(mWindow);
 	SDL_Quit();
@@ -88,11 +100,24 @@ void Game::UpdateGame()
 	{
 		deltaTime = 0.05f;
 	}
+
+	mScene->Update(deltaTime);
 }
 
 void Game::GenerateOutput()
 {
 	SDL_SetRenderDrawColor(mRenderer, 0, 0, 0, 255);
 	SDL_RenderClear(mRenderer);
+	mScene->Draw(mRenderer);
 	SDL_RenderPresent(mRenderer);
+}
+
+void Game::LoadData()
+{
+	
+}
+
+void Game::UnloadData()
+{
+	mScene->Unload();
 }

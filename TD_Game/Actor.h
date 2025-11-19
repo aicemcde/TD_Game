@@ -15,6 +15,7 @@ public:
 	};
 
 	Actor(class Game* game);
+	~Actor();
 
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);
@@ -36,7 +37,8 @@ public:
 
 	Vector2 GetForward() const { return Vector2(Math::Cos(mRotation), -Math::Sin(mRotation)); }
 
-	void AddComponent(const class Component* comp);
+	void AddComponent(std::unique_ptr<class Component> comp);
+	void RemoveComponent(class Component* comp);
 private:
 	State mState;
 	Vector2 mPosition;
