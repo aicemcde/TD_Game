@@ -3,6 +3,8 @@
 #include <memory>
 #include "Math.h"
 #include <vector>
+#include "Game.h"
+#include "Scene.h"
 
 class Actor
 {

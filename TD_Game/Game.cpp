@@ -1,6 +1,8 @@
 #include "Game.h"
 #include "Scene.h"
 #include "ResourceManger.h"
+#include "Actor.h"
+#include "TileMapComponent.h"
 
 Game::Game()
 	:mWindow(nullptr)
@@ -116,7 +118,18 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	
+	Vector2 screenSize(1024.0f, 768.0f);
+	auto temp = std::make_unique<Actor>(this);
+	temp->SetPos(Vector2(512.0f, 384.0f));
+	std::unique_ptr<TileMapComponent> tmc = std::make_unique<TileMapComponent>(temp.get());
+	tmc->SetScreenSize(screenSize);
+	SDL_Texture* tstex = mResourceManager->GetTexture("Assets/TileGreen.png", mRenderer);
+	tmc->SetTileTexture(1, tstex);
+	tstex = mResourceManager->GetTexture("Assets/TileBrown.png", mRenderer);
+	tmc->SetTileTexture(2, tstex);
+	tmc->LoadCSV("Assets/MapLayer.csv");
+	temp->AddComponent(std::move(tmc));
+	mScene->AddActor(std::move(temp));
 }
 
 void Game::UnloadData()

@@ -8,12 +8,12 @@ SpriteComponent::SpriteComponent(Actor* owner, int updateOrder)
 	, mTexHeight(0)
 	, mTexWidth(0)
 {
-
+	mOwner->GetGame()->GetScene()->AddSpriteComponent(this);
 }
 
 SpriteComponent::~SpriteComponent()
 {
-
+	mOwner->GetGame()->GetScene()->RemoveSpriteComponent(this);
 }
 
 void SpriteComponent::Draw(SDL_Renderer* renderer)

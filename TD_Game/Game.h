@@ -11,6 +11,9 @@ public:
 	bool Initialize();
 	void RunLoop();
 	void Shutdown();
+
+	class Scene* GetScene() const { return mScene.get(); }
+	class ResourceManager* GetResourceManager() const { return mResourceManager.get(); }
 private:
 	void ProcessInput();
 	void UpdateGame();
