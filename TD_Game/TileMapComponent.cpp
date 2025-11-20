@@ -1,7 +1,5 @@
 #include "TileMapComponent.h"
-#include <fstream>
-#include <sstream>
-#include <iostream>
+
 
 TileMapComponent::TileMapComponent(Actor* owner, int updateOrder)
 	: SpriteComponent(owner, updateOrder)
@@ -13,32 +11,7 @@ void TileMapComponent::Update(float deltaTime)
 	SpriteComponent::Update(deltaTime);
 }
 
-void TileMapComponent::LoadCSV(const std::string& fileName)
-{
-	std::ifstream tileMap(fileName);
 
-	if (!tileMap)
-	{
-		SDL_Log("Failed to open tile map file: %s", fileName.c_str());
-		return;
-	}
-
-	std::string tilesRowStr;
-	while (std::getline(tileMap, tilesRowStr))
-	{
-		std::vector<int> addTilesRow;
-		std::string tileStr;
-		std::istringstream iss(tilesRowStr);
-
-		while (std::getline(iss, tileStr, ','))
-		{
-			int tile = std::stoi(tileStr);
-			addTilesRow.emplace_back(tile);
-		}
-
-		mTileMap.push_back(addTilesRow);
-	}
-}
 
 void TileMapComponent::Draw(SDL_Renderer* renderer)
 {

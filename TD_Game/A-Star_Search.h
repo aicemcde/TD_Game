@@ -3,10 +3,7 @@
 
 namespace PathFinding
 {
-	std::vector<const WeightedGraphNode*> AStarSearch(
-		const WeightedGraphNode* startNode, 
-		const WeightedGraphNode* goalNode
-	);
+	std::vector<const WeightedGraphNode*> AStarSearch(const GameLevel& level);
 
 	float ComputeHeuristic(const WeightedGraphNode* mTo, const WeightedGraphNode* goalNode);
 }

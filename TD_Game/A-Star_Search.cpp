@@ -1,6 +1,7 @@
 #include "A-Star_Search.h"
 #include <unordered_map>
 #include <cmath>
+#include <SDL.h>
 
 namespace PathFinding
 {
@@ -15,15 +16,23 @@ namespace PathFinding
 
 	using AStarMap = std::unordered_map<const WeightedGraphNode*, AStarScratch>;
 
-	std::vector<const WeightedGraphNode*> AStarSearch(
-		const WeightedGraphNode* startNode, 
-		const WeightedGraphNode* goalNode)
+	std::vector<const WeightedGraphNode*> AStarSearch(const GameLevel& level)
 	{
-		AStarMap nodeMap;//各ノードごとの情報
+		AStarMap nodeMap;		//各ノードごとの情報
 
 		std::vector<const WeightedGraphNode*> openSet;
 
-		nodeMap[startNode].mInClosedSet = true;
+		const WeightedGraphNode* startNode = level.startNode;
+		const WeightedGraphNode* goalNode = level.goalNode;
+
+		if (!startNode || !goalNode)
+		{
+			SDL_Log("start or goal not exist");
+			return {};
+		}
+
+		nodeMap[startNode].mInOpenSet = true;
+		nodeMap[startNode].mInClosedSet = false;
 		nodeMap[startNode].mHeuristicCost = ComputeHeuristic(startNode, goalNode);
 		nodeMap[startNode].mActualFromStartCost = 0.0f;
 		openSet.emplace_back(startNode);
@@ -44,15 +53,37 @@ namespace PathFinding
 
 			const WeightedGraphNode* currentNode = *iter;
 
-			if (currentNode == goalNode)
-			{
-				break;
-			}
+			
 			openSet.erase(iter);
 			nodeMap[currentNode].mInOpenSet = false;
 			nodeMap[currentNode].mInClosedSet = true;
 
-			//currの隣のノードを調査
+			//経路の復元
+			if (currentNode == goalNode)
+			{
+				std::vector<const WeightedGraphNode*> path;
+				const WeightedGraphNode* curr = goalNode;
+				while (curr != startNode || curr != nullptr)
+				{
+					path.emplace_back(curr);
+					const WeightedEdge* parentEdge = nodeMap[curr].mParentEdge;		//親のエッジ(線)を取得
+					if (parentEdge)
+					{
+						curr = parentEdge->mFrom;		//親ノードに移動
+					}
+					else
+					{
+						break;
+					}
+																
+				}
+
+				path.emplace_back(startNode);
+				std::reverse(path.begin(), path.end());
+				return path;
+			}
+
+			//隣のノードを調査
 			for (const WeightedEdge& edge : currentNode->mEdges)
 			{
 				const WeightedGraphNode* neighbor = edge.mTo;
@@ -64,6 +95,7 @@ namespace PathFinding
 
 				float newG = nodeMap[currentNode].mActualFromStartCost + edge.mWeight;
 
+				//オープンセットにない、またはより良い経路が見つかった場合、情報を更新
 				if (!data.mInOpenSet || newG < data.mActualFromStartCost)
 				{
 					data.mActualFromStartCost = newG;
@@ -77,30 +109,11 @@ namespace PathFinding
 				}
 			}
 
-			if (nodeMap.find(goalNode) == nodeMap.end() || !nodeMap[goalNode].mParentEdge)
-			{
-				if (startNode == goalNode)
-				{
-					return { startNode };
-				}
-				return {};
-			}
-
-			//経路の復元
-			std::vector<const WeightedGraphNode*> path;
-			const WeightedGraphNode* curr = goalNode;
-			while (curr != startNode || curr != nullptr)
-			{
-				path.emplace_back(curr);
-				const WeightedEdge* parentEdge = nodeMap[curr].mParentEdge;		//親のエッジ(線)を取得
-				curr = parentEdge->mFrom;										//親ノードに移動
-			}
-
-			path.emplace_back(startNode);
-			std::reverse(path.begin(), path.end());
-
-			return path;
 		}
+
+		// ループを抜けた場合、経路が見つからなかったので空のパスを返す
+		SDL_Log("goal not rearched");
+		return {};
 	}
 
 	float ComputeHeuristic(const WeightedGraphNode* mTo, const WeightedGraphNode* goalNode)

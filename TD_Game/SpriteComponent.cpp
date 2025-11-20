@@ -1,5 +1,6 @@
 #include "SpriteComponent.h"
 #include "Actor.h"
+#include "Scene.h"
 
 SpriteComponent::SpriteComponent(Actor* owner, int updateOrder)
 	:Component(owner, updateOrder)

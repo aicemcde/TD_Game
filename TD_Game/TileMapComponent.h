@@ -12,8 +12,8 @@ public:
 	void Update(float deltaTIme) override;
 	void Draw(SDL_Renderer* renderer) override;
 	void SetScreenSize(const Vector2& size) { mScreenSize = size; }
+	void SetTileMap(const std::vector<std::vector<int>>& tileMap) { mTileMap = tileMap; }
 	
-	void LoadCSV(const std::string& fileName);
 	std::vector<std::vector<int>> GetTileMap() const { return mTileMap; }
 	void SetTileTexture(int tileID, SDL_Texture* texture) { mTileTextures[tileID] = texture; }
 

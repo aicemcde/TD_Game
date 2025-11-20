@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <memory>
+#include "Graph_Types.h"
 
 class Game
 {
@@ -14,6 +15,7 @@ public:
 
 	class Scene* GetScene() const { return mScene.get(); }
 	class ResourceManager* GetResourceManager() const { return mResourceManager.get(); }
+	SDL_Renderer* GetRenderer() const { return mRenderer; }
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -29,4 +31,6 @@ private:
 
 	std::unique_ptr<class Scene> mScene;
 	std::unique_ptr<class ResourceManager> mResourceManager;
+
+	GameLevel level;
 };

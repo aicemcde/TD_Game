@@ -4,7 +4,6 @@
 #include "Math.h"
 #include <vector>
 #include "Game.h"
-#include "Scene.h"
 
 class Actor
 {
@@ -17,7 +16,7 @@ public:
 	};
 
 	Actor(class Game* game);
-	~Actor();
+	virtual ~Actor();
 
 	void Update(float deltaTime);
 	void UpdateComponents(float deltaTime);

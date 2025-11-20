@@ -35,3 +35,10 @@ struct Graph
 {
 	std::vector<GraphNode> mNodes;
 };
+
+struct GameLevel
+{
+	WeightedGraph graph;
+	WeightedGraphNode* startNode = nullptr;
+	WeightedGraphNode* goalNode = nullptr;
+};
