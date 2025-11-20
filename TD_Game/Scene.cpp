@@ -98,7 +98,7 @@ void Scene::AddSpriteComponent(SpriteComponent* sc)
 			break;
 		}
 	}
-	mSpriteComps.insert(iter, std::move(sc));
+	mSpriteComps.insert(iter, sc);
 }
 
 void Scene::RemoveSpriteComponent(SpriteComponent* sc)
