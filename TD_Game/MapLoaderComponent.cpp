@@ -38,7 +38,7 @@ void MapLoaderComponent::LoadCSV(const std::string& fileName)
 	}
 }
 
-GameLevel MapLoaderComponent::BuildGraphFromGrid()
+GameLevel MapLoaderComponent::BuildGraphFromGrid(const Vector2& screenSize)
 {
 	GameLevel level;
 	int height = static_cast<int>(mTileMap.size());
@@ -47,6 +47,10 @@ GameLevel MapLoaderComponent::BuildGraphFromGrid()
 		return level;
 	}
 	int width = static_cast<int>(mTileMap[0].size());
+
+	int tileSize_x = static_cast<int>(screenSize.x) / width;
+	int tileSize_y = static_cast<int>(screenSize.y) / height;
+	SDL_Log("BuildGraphFromGrid: width=%d, height=%d, tileSize=(%d, %d)", width, height, tileSize_x, tileSize_y);
 	std::vector<std::vector<WeightedGraphNode*>> nodeGrid(height, std::vector<WeightedGraphNode*>(width, nullptr));
 
 	for (int y = 0; y < height; ++y)
@@ -57,9 +61,10 @@ GameLevel MapLoaderComponent::BuildGraphFromGrid()
 			if (tileType != -1 && tileType != 1)
 			{
 				WeightedGraphNode* newNode = new WeightedGraphNode();
-				float posX = static_cast<float>(x * TILE_SIZE + TILE_SIZE * 0.5f);
-				float posY = static_cast<float>(y * TILE_SIZE + TILE_SIZE * 0.5f);
+				float posX = static_cast<float>(x * tileSize_x + tileSize_x * 0.5f);	
+				float posY = static_cast<float>(y * tileSize_y + tileSize_y * 0.5f);
 				newNode->SetPos(Vector2(posX, posY));
+				SDL_Log("Node created at (%.1f, %.1f) for tileType %d", posX, posY, tileType);
 
 				if (tileType == 100)
 				{

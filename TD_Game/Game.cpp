@@ -144,7 +144,7 @@ void Game::LoadData()
 	tmc->SetTileTexture(200, tstex);	//GOAL
 	mlc->LoadCSV("Assets/MapLayer.csv");
 	tmc->SetTileMap(mlc->GetMap());
-	level = mlc->BuildGraphFromGrid();
+	level = mlc->BuildGraphFromGrid(screenSize);
 	if (!level.startNode || !level.goalNode)
 	{
 		SDL_Log("start goal not exist");
@@ -157,6 +157,7 @@ void Game::LoadData()
 
 	mScene->AddActor(std::move(enemy));
 	temp->AddComponent(std::move(tmc));
+	temp->AddComponent(std::move(mlc));
 	mScene->AddActor(std::move(temp));
 }
 

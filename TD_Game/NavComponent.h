@@ -10,10 +10,11 @@ public:
 	void Update(float delta) override;
 	void TurnTo(const Vector2& pos);
 	void SetPath(const GameLevel& level);
-	Vector2 GetFirstPos() const { if (!mWayPointsPos.empty()) { return mWayPointsPos.at(0); } }
-	bool HasHash() const { return !mWayPointsPos.empty(); }
+	Vector2 GetFirstPos();
+	Vector2 GetNextPos() const { return mNextPos; }
+	bool HasPath() const { return !mWayPointsPos.empty(); }
 private:
-	Vector2 mNextPos;
+	Vector2 mNextPos = Vector2::Zero;
 	std::vector<const WeightedGraphNode*> mPath;	//経路上のノード
 	std::vector<Vector2> mWayPointsPos;		//経路上の位置
 	int mCurrentWayPoint = 0;				//現在の経路上の位置インデックス

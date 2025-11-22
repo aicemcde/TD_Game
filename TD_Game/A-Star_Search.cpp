@@ -78,7 +78,6 @@ namespace PathFinding
 																
 				}
 
-				path.emplace_back(startNode);
 				std::reverse(path.begin(), path.end());
 				return path;
 			}

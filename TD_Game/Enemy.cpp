@@ -4,6 +4,7 @@
 #include "ResourceManger.h"
 #include "NavComponent.h"
 
+
 Enemy::Enemy(Game* game)
 	:Actor(game)
 {
@@ -22,12 +23,13 @@ Enemy::Enemy(Game* game)
 void Enemy::Initialize(const GameLevel& level)
 {
 	mNavComp->SetPath(level);
-	if (mNavComp->HasHash())
+	if (mNavComp->HasPath())
 	{
 		Vector2 firstPos = mNavComp->GetFirstPos();
-		firstPos.x -= 64.0f;
 		firstPos.x -= 32.0f;
 		SetPos(firstPos);
+		mNavComp->TurnTo(mNavComp->GetNextPos());
+		SDL_Log("Enemy Initialize pos(%.1f, %.1f)", firstPos.x, firstPos.y);
 	}
 	else
 	{

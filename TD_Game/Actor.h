@@ -32,7 +32,7 @@ public:
 	void SetState(const State& state) { mState = state; }
 	void SetPos(const Vector2& pos) { mPosition = pos; }
 	void SetScale(float scale) { mScale = scale; }
-	void SetRot(float rot) { mRotation = rot; }
+	void SetRot(float rot) { mRotation = rot; SDL_Log("SetRot : %.1f", rot); }
 
 	Game* GetGame() const { return mGame; }
 
