@@ -9,12 +9,21 @@ NavComponent::NavComponent(class Actor* owner, int updateOrder)
 
 void NavComponent::Update(float delta)
 {
-	Vector2 diff = mOwner->GetPos() - mNextPos;
-	if (diff.Length() < 2.0f)
+
+	if (mCurrentWayPoint >= mNumWayPoints || mWayPointsPos.empty())
 	{
-		mNextPos = mWayPointsPos[mCurrentWayPoint];
-		TurnTo(mNextPos);
-		mCurrentWayPoint++;
+		SDL_Log("NavComponent: no waypoints or operaton end");
+		return;
+	}
+	Vector2 diff = mOwner->GetPos() - mNextPos;
+	if (diff.LengthSq() <= 2.0f * 2.0f)
+	{
+		++mCurrentWayPoint;
+		if (mCurrentWayPoint < mNumWayPoints - 1)
+		{
+			mNextPos = mWayPointsPos.at(mCurrentWayPoint + 1);
+			TurnTo(mNextPos);
+		}
 	}
 	MoveComponent::Update(delta);
 }
@@ -29,15 +38,38 @@ void NavComponent::TurnTo(const Vector2& pos)
 void NavComponent::SetPath(const GameLevel& level)
 {
 	mPath = PathFinding::AStarSearch(level);
+	mWayPointsPos.clear();
+
 	if (mPath.empty())
 	{
 		SDL_Log("path not find");
 		return;
 	}
-	mNumWayPoints = static_cast<int>(mPath.size());
+
 	for (auto& node : mPath)
 	{
 		mWayPointsPos.emplace_back(node->GetPos());
 	}
 
+	mNumWayPoints = static_cast<int>(mWayPointsPos.size());
+
+	if (mNumWayPoints > 0)
+	{
+		
+		mNextPos = mWayPointsPos.at(0);
+		mCurrentWayPoint = -1;
+		
+	}
+	else
+	{
+		SDL_Log("SetPath : waypoints pos empty");
+	}
+}
+
+Vector2 NavComponent::GetFirstPos()
+{
+	if (!mWayPointsPos.empty())
+	{
+		return mWayPointsPos.at(0);
+	}
 }

@@ -9,7 +9,7 @@ class MapLoaderComponent : public Component
 {
 public:
 	MapLoaderComponent(class Actor* owner);
-	GameLevel BuildGraphFromGrid();
+	GameLevel BuildGraphFromGrid(const Vector2& screen);
 
 	void LoadCSV(const std::string& fileName);
 	std::vector<std::vector<int>> GetMap() const { return mTileMap; }

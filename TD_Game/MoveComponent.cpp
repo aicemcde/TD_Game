@@ -10,13 +10,13 @@ MoveComponent::MoveComponent(class Actor* owner, int updateOrder)
 
 void MoveComponent::Update(float delta)
 {
-	if (Math::NearZero(mAngularSpeed))
+	if (!Math::NearZero(mAngularSpeed))
 	{
 		float rot = mOwner->GetRot();
 		rot += mAngularSpeed * delta;
 		mOwner->SetRot(rot);
 	}
-	if (Math::NearZero(mForwardSpeed))
+	if (!Math::NearZero(mForwardSpeed))
 	{
 		Vector2 pos = mOwner->GetPos();
 		pos += mOwner->GetForward() * mForwardSpeed * delta;
