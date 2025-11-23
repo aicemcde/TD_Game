@@ -14,6 +14,6 @@ public:
 
 	void RegisterState(std::unique_ptr<class AIState> state);
 private:
-	std::unordered_map<std::string, class AIState*> mStateMap;
+	std::unordered_map<std::string, std::unique_ptr<class AIState>> mStateMap;
 	class AIState* mCurrentState;
 };
