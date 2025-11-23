@@ -26,7 +26,7 @@ void SpriteComponent::Draw(SDL_Renderer* renderer)
 		r.h = static_cast<int>(mTexHeight * mOwner->GetScale());
 		r.x = static_cast<int>(mOwner->GetPos().x - r.w / 2);
 		r.y = static_cast<int>(mOwner->GetPos().y - r.h / 2);
-		SDL_RenderCopyEx(renderer, mTexture, nullptr, &r, Math::ToDegrees(mOwner->GetRot()), nullptr, SDL_FLIP_NONE);
+		SDL_RenderCopyEx(renderer, mTexture, nullptr, &r, Math::ToDegrees(mOwner->GetRot()), nullptr, mRendererFlip);
 	}
 }
 
@@ -36,5 +36,25 @@ void SpriteComponent::SetTexture(SDL_Texture* texture)
 	if (mTexture)
 	{
 		SDL_QueryTexture(mTexture, nullptr, nullptr, &mTexWidth, &mTexHeight);
+	}
+}
+
+void SpriteComponent::SetRendererFlip(bool vertical, bool horizontal)
+{
+	if (vertical && horizontal)
+	{
+		mRendererFlip = static_cast<SDL_RendererFlip>(SDL_FLIP_VERTICAL | SDL_FLIP_HORIZONTAL);
+	}
+	else if (vertical)
+	{
+		mRendererFlip = SDL_FLIP_VERTICAL;
+	}
+	else if (horizontal)
+	{
+		mRendererFlip = SDL_FLIP_HORIZONTAL;
+	}
+	else
+	{
+		mRendererFlip = SDL_FLIP_NONE;
 	}
 }

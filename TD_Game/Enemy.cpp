@@ -36,3 +36,15 @@ void Enemy::Initialize(const GameLevel& level)
 		SDL_Log("Enemy Initialize failed: no path");
 	}
 }
+
+void Enemy::UpdateActor(float deltaTime)
+{
+	if (GetRot() > 0.10f || GetRot() < -0.10f)
+	{
+		mSprComp->SetRendererFlip(false, true);
+	}
+	else
+	{
+		mSprComp->SetRendererFlip(false, false);
+	}
+}
