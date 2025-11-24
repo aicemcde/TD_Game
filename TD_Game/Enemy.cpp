@@ -11,7 +11,7 @@ Enemy::Enemy(Game* game)
 	:Actor(game)
 {
 	std::unique_ptr<SpriteComponent> sc = std::make_unique<SpriteComponent>(this);
-	sc->SetTexture(game->GetResourceManager()->GetTexture("Assets/Airplane.png", game->GetRenderer()));
+	sc->SetTexture(mGame->GetResourceManager()->GetTexture("Assets/Airplane.png", mGame->GetRenderer()));
 	mSprComp = sc.get();
 
 	std::unique_ptr<NavComponent> nc = std::make_unique<NavComponent>(this);

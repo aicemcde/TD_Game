@@ -40,7 +40,7 @@ public:
 
 	void AddComponent(std::unique_ptr<class Component> comp);
 	void RemoveComponent(class Component* comp);
-private:
+protected:
 	State mState;
 	Vector2 mPosition;
 	float mScale;
