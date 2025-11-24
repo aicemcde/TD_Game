@@ -3,7 +3,9 @@
 #include "Game.h"
 #include "ResourceManger.h"
 #include "NavComponent.h"
-
+#include "AIComponent.h"
+#include "AIMove.h"
+#include "AIDeath.h"
 
 Enemy::Enemy(Game* game)
 	:Actor(game)
@@ -16,6 +18,14 @@ Enemy::Enemy(Game* game)
 	nc->SetForwardSpeed(64.0f);
 	mNavComp = nc.get();
 
+	std::unique_ptr<AIComponent> aic = std::make_unique<AIComponent>(this);
+	aic->RegisterState(std::make_unique<AIMove>(aic.get()));
+	aic->RegisterState(std::make_unique<AIDeath>(aic.get()));
+	mAIComp = aic.get();
+
+	aic->ChangeState("Move");
+
+	AddComponent(std::move(aic));
 	AddComponent(std::move(sc));
 	AddComponent(std::move(nc));
 }
@@ -46,5 +56,10 @@ void Enemy::UpdateActor(float deltaTime)
 	else
 	{
 		mSprComp->SetRendererFlip(false, false);
+	}
+
+	if (mNavComp->GetEnd_of_rute())
+	{
+		mAIComp->ChangeState("Death");
 	}
 }

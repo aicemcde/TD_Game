@@ -13,6 +13,7 @@ public:
 	Vector2 GetFirstPos();
 	Vector2 GetNextPos() const { return mNextPos; }
 	bool HasPath() const { return !mWayPointsPos.empty(); }
+	bool GetEnd_of_rute() const { return mCurrentWayPoint >= mNumWayPoints; }
 private:
 	Vector2 mNextPos = Vector2::Zero;
 	std::vector<const WeightedGraphNode*> mPath;	//Œo˜Hã‚Ìƒm[ƒh

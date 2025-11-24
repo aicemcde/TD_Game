@@ -8,6 +8,6 @@ public:
 	
 	void Update(float deltaTime) override;
 	void OnEnter() override;
-
+    void OnExit() override;
 	const char* GetName() const override { return "Death"; }
 };

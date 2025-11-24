@@ -12,4 +12,5 @@ public:
 private:
 	class NavComponent* mNavComp = nullptr;
 	class SpriteComponent* mSprComp = nullptr;
+	class AIComponent* mAIComp = nullptr;
 };

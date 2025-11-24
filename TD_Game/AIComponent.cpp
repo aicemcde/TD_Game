@@ -31,7 +31,7 @@ void AIComponent::ChangeState(const std::string& name)
 	auto iter = mStateMap.find(name);
 	if (iter != mStateMap.end())
 	{
-		mCurrentState = iter->second;
+		mCurrentState = iter->second.get();
 		mCurrentState->OnEnter();
 	}
 	else
