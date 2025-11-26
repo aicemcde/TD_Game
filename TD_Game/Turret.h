@@ -11,5 +11,5 @@ private:
 	class SpriteComponent* mSprComp = nullptr;
 	class AIComponent* mAIComp = nullptr;
 
-	float missileCooldown = 0.0f;
+	float mMissileCooldown = 1.0f;
 };

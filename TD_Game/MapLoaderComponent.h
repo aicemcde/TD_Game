@@ -3,8 +3,6 @@
 #include "Component.h"
 #include <string>
 
-using GridData = std::vector<std::vector<int>>;
-
 class MapLoaderComponent : public Component
 {
 public:

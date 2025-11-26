@@ -2,6 +2,8 @@
 #include <vector>
 #include "Math.h"
 
+using GridData = std::vector<std::vector<int>>;
+
 struct WeightedGraphNode;
 
 struct WeightedEdge

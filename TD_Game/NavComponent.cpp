@@ -72,4 +72,5 @@ Vector2 NavComponent::GetFirstPos()
 	{
 		return mWayPointsPos.at(0);
 	}
+	return Vector2::Zero;
 }

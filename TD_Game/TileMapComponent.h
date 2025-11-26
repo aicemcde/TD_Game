@@ -8,7 +8,7 @@
 class TileMapComponent : public SpriteComponent
 {
 public:
-	TileMapComponent(class Actor* owner, int updateOrder = 20);
+	TileMapComponent(class Actor* owner, int updateOrder = 10);
 	void Update(float deltaTIme) override;
 	void Draw(SDL_Renderer* renderer) override;
 	void SetScreenSize(const Vector2& size) { mScreenSize = size; }

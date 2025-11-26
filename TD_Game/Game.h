@@ -16,6 +16,8 @@ public:
 	class Scene* GetScene() const { return mScene.get(); }
 	class ResourceManager* GetResourceManager() const { return mResourceManager.get(); }
 	SDL_Renderer* GetRenderer() const { return mRenderer; }
+
+	void SetMissile(class Missile* missile) { mMissiles.emplace_back(missile); }
 private:
 	void ProcessInput();
 	void UpdateGame();
@@ -33,4 +35,6 @@ private:
 	std::unique_ptr<class ResourceManager> mResourceManager;
 
 	GameLevel level;
+
+	std::vector<class Missile*> mMissiles;
 };

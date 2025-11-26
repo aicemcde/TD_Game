@@ -3,13 +3,15 @@
 
 CircleComponent::CircleComponent(Actor* owner)
 	:Component(owner)
+	,mRadius(0.0f)
 {
 
 }
 
 const Vector2& CircleComponent::GetCenter() const
 {
-	return mOwner->GetPos();
+	const Vector2& pos = mOwner->GetPos();
+	return pos;
 }
 
 bool Intersect(const CircleComponent& a, const CircleComponent& b)
