@@ -3,6 +3,9 @@
 #include <memory>
 #include "Graph_Types.h"
 
+class Scene;
+class ResourceManager;
+
 class Game
 {
 public:
@@ -13,12 +16,25 @@ public:
 	void RunLoop();
 	void Shutdown();
 
-	class Scene* GetScene() const { return mScene.get(); }
+	class Scene* GetScene()  { return mScene.get(); }
 	class ResourceManager* GetResourceManager() const { return mResourceManager.get(); }
 	SDL_Renderer* GetRenderer() const { return mRenderer; }
 
 	void SetMissile(class Missile* missile) { mMissiles.emplace_back(missile); }
+
+	static Game& Get() { return *sInstance; }
+	const Vector2& GetScreenSize() { return mScreenSize; }
+	void SetScreenSize(const Vector2& size) { mScreenSize = size; }
+	const Vector2& GetTileSize() { return mTileSize; }
+	void SetTileSize(const Vector2& size) { mTileSize = size; }
+	const GameLevel& GetLevel() const { return mLevel; }
+	void SetLevel(GameLevel level) { mLevel = std::move(level); }
 private:
+	static Game* sInstance;
+	Vector2 mScreenSize;
+	Vector2 mTileSize;
+	GameLevel mLevel;
+
 	void ProcessInput();
 	void UpdateGame();
 	void GenerateOutput();
@@ -34,7 +50,7 @@ private:
 	std::unique_ptr<class Scene> mScene;
 	std::unique_ptr<class ResourceManager> mResourceManager;
 
-	GameLevel level;
+	
 
 	std::vector<class Missile*> mMissiles;
 };

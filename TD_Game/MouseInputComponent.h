@@ -6,17 +6,18 @@
 class MouseInputComponent : public Component
 {
 public:
-	MouseInputComponent(class Actor* owner);
+	MouseInputComponent(class Actor* owner, const TileDatas& map);
 	void ProcessInput(const uint8_t* keyState) override;
-	void Initialize(const GridData& map);
-
-	void SetMap(const GridData& map) { mTileMap = map; }
-	void SetScreenSize(const Vector2& size) { mScreenSize = size; }
-	const GridData& GetMap() const { return mTileMap; }
+	void Update(float deltaTime) override;
+	
+	void SetMap(const TileDatas& map) { mTileMap = map; }
+	const TileDatas& GetMap() const { return mTileMap; }
 private:
-	GridData mTileMap;
-	Vector2 mScreenSize = Vector2::Zero;
-	Vector2 mTileSize = Vector2::Zero;
-	std::vector<Vector2> mCanBuildTurretPoss;	//タレットを設置できる座標配列
-	std::vector<Vector2> mPossForMap;	//上の座標のマップ上の座標配列, Vector2(列, 行)
+	bool IsValidIndex(int x, int y);
+	Vector2 mMousePos;
+	bool mIsDownMouse = false;
+	TileDatas mTileMap;
+	std::vector<Data> mBaseTilesForTurret;
+	int mLastIndexX = -1;
+	int mLastIndexY = -1;
 };

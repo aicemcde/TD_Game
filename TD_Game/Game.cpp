@@ -4,7 +4,7 @@
 #include "Enemy.h"
 #include "BGActor.h"
 
-
+Game* Game::sInstance = nullptr;
 
 Game::Game()
 	:mWindow(nullptr)
@@ -13,7 +13,8 @@ Game::Game()
 	, mScene(nullptr)
 	, mTicksCount(0)
 {
-
+	if (sInstance == nullptr) sInstance = this;
+	mScreenSize = Vector2(1024.0f, 768.0f);
 }
 
 Game::~Game()
@@ -127,9 +128,8 @@ void Game::GenerateOutput()
 void Game::LoadData()
 {
 	std::unique_ptr<BGActor> bgActor = std::make_unique<BGActor>(this);
-	level = bgActor->GetLevel();
 
-	if (!level.startNode || !level.goalNode)
+	if (!mLevel.startNode || !mLevel.goalNode)
 	{
 		SDL_Log("start goal not exist");
 		Shutdown();
@@ -137,7 +137,7 @@ void Game::LoadData()
 	}
 
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(this);
-	enemy->Initialize(level);
+	enemy->Initialize(mLevel);
 
 	mScene->AddActor(std::move(enemy));
 	mScene->AddActor(std::move(bgActor));

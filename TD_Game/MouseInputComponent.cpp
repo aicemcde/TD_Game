@@ -1,68 +1,85 @@
 #include "MouseInputComponent.h"
 #include "Game.h"
 #include "Actor.h"
+#include "Turret.h"
+#include "Scene.h"
 
-MouseInputComponent::MouseInputComponent(Actor* owner)
+MouseInputComponent::MouseInputComponent(Actor* owner, const TileDatas& map)
 	:Component(owner)
+	,mTileMap(map)
 {
+	if (mTileMap.empty())
+	{
+		SDL_Log("MIC : TileMap is empty");
+		Game::Get().Shutdown();
+		return;
+	}
+}
 
+bool MouseInputComponent::IsValidIndex(int x, int y)
+{
+	if (y < 0 || y >= mTileMap.size()) return false;
+	if (x < 0 || x >= mTileMap[0].size()) return false;
+
+	return true;
 }
 
 void MouseInputComponent::ProcessInput(const uint8_t* keyState)
 {
-	int mousePos_x = 0;
-	int mousePos_y = 0;
-	int mouseBottonState = SDL_GetMouseState(&mousePos_x, &mousePos_y);
-	int posCount = 0;
-	for (auto pos : mCanBuildTurretPoss)
-	{
-		int tilePos_x = static_cast<int>(mPossForMap[posCount].x);
-		int tilePos_y = static_cast<int>(mPossForMap[posCount].y);
-		
-		if (mTileMap[tilePos_x][tilePos_y] == 11)
-		{
-			mTileMap[tilePos_x][tilePos_y] = 1;
-		}
-		if (mTileMap[tilePos_x][tilePos_y] == 1 && mousePos_x > pos.x && mousePos_x < pos.x + mTileSize.x && mousePos_y > pos.y && mousePos_y < pos.y + mTileSize.y)
-		{
-			
-			mTileMap[tilePos_x][tilePos_y] = 11;
-			if (mouseBottonState == 1)
-			{
-				mTileMap[tilePos_x][tilePos_y] = 22;
-			}
-		}
-		++posCount;
-	}
+	int x, y;
+	int mouseBottonState = SDL_GetMouseState(&x, &y);
+	mMousePos.x = static_cast<float>(x);
+	mMousePos.y = static_cast<float>(y);
+
+	mIsDownMouse = (mouseBottonState & SDL_BUTTON(SDL_BUTTON_LEFT));
 }
 
-void MouseInputComponent::Initialize(const GridData& map)
+void MouseInputComponent::Update(float deltaTime)
 {
-	mTileMap = map;
-	if (mTileMap.empty())
+	Vector2 tileSize = Game::Get().GetTileSize();
+	int indexX = static_cast<int>(mMousePos.x / tileSize.x);
+	int indexY = static_cast<int>(mMousePos.y / tileSize.y);
+
+	if (mLastIndexX != -1 || mLastIndexY != -1)
 	{
-		SDL_Log("MouseInputComp : TileMap is empty");
-		return;
-	}
-	const int Rows = static_cast<int>(mTileMap.size());
-	const int Cols = static_cast<int>(mTileMap[0].size());
-
-	mTileSize.x = mScreenSize.x / Cols;
-	mTileSize.y = mScreenSize.y / Rows;
-
-	SDL_Log("mic : row,%d col,%d", Rows, Cols);
-
-	for (int rowCount = 0; rowCount < Rows; ++rowCount)
-	{
-		for (int colCount = 0; colCount < Cols; ++colCount)
+		Data& prevTile = mTileMap[mLastIndexY][mLastIndexX];
+		if (prevTile.mHadTurret)
 		{
-			if (mTileMap[rowCount][colCount] == 1)
+		}
+		else
+		{
+			prevTile.mTileType = TileTypes::NORMALGROUND;
+		}
+	}
+
+	if (IsValidIndex(indexX, indexY))
+	{
+		if (mLastIndexX != indexX || mLastIndexY != indexY)
+		{
+			
+			Data& currentTile = mTileMap[indexY][indexX];
+			if (currentTile.mTileType == NORMALGROUND)
 			{
-				float x = colCount * mTileSize.x;
-				float y = rowCount * mTileSize.y;
-				mCanBuildTurretPoss.emplace_back(Vector2(x, y));
-				mPossForMap.emplace_back(Vector2(static_cast<float>(rowCount), static_cast<float>(colCount)));
+				currentTile.mTileType = TileTypes::SELCTEDNORMALGROUND;
+			}
+			mLastIndexX = indexX;
+			mLastIndexY = indexY;
+		}
+
+		if (mIsDownMouse)
+		{
+			Data& currentTile = mTileMap[indexY][indexX];
+			if (currentTile.mTileType == TileTypes::SELCTEDNORMALGROUND || currentTile.mTileType == TileTypes::NORMALGROUND)
+			{
+				currentTile.mTileType = TileTypes::TURRETBASEGROUND;
+				currentTile.mHadTurret = true;
+				std::unique_ptr<Turret> turret = std::make_unique<Turret>(&Game::Get(), currentTile.mCenterPos);
+				Game::Get().GetScene()->AddActor(std::move(turret));
 			}
 		}
+	}
+	else
+	{
+		if (mLastIndexX != -1) mLastIndexX = -1; mLastIndexY = -1;
 	}
 }

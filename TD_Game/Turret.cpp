@@ -7,9 +7,11 @@
 #include "Missile.h"
 #include "Scene.h"
 
-Turret::Turret(Game* game)
+Turret::Turret(Game* game, const Vector2& centerPos)
 	:Actor(game)
 {
+	SetPos(centerPos);
+
 	std::unique_ptr<SpriteComponent> sc = std::make_unique<SpriteComponent>(this, 20);
 	sc->SetTexture(mGame->GetResourceManager()->GetTexture("Assets/Tower.png", mGame->GetRenderer()));
 	mSprComp = sc.get();
