@@ -49,14 +49,6 @@ void Enemy::Initialize(const GameLevel& level)
 
 void Enemy::UpdateActor(float deltaTime)
 {
-	if (GetRot() > 0.10f || GetRot() < -0.10f)
-	{
-		mSprComp->SetRendererFlip(false, true);
-	}
-	else
-	{
-		mSprComp->SetRendererFlip(false, false);
-	}
 
 	if (mNavComp->GetEnd_of_rute())
 	{

@@ -17,6 +17,7 @@ SpriteComponent::~SpriteComponent()
 	mOwner->GetGame()->GetScene()->RemoveSpriteComponent(this);
 }
 
+//SDL‚Ì•`‰æ‚ÍŒv‰ñ‚è‚ª³
 void SpriteComponent::Draw(SDL_Renderer* renderer)
 {
 	if (mTexture)
@@ -26,7 +27,7 @@ void SpriteComponent::Draw(SDL_Renderer* renderer)
 		r.h = static_cast<int>(mTexHeight * mOwner->GetScale());
 		r.x = static_cast<int>(mOwner->GetPos().x - r.w / 2);
 		r.y = static_cast<int>(mOwner->GetPos().y - r.h / 2);
-		SDL_RenderCopyEx(renderer, mTexture, nullptr, &r, Math::ToDegrees(mOwner->GetRot()), nullptr, mRendererFlip);
+		SDL_RenderCopyEx(renderer, mTexture, nullptr, &r, -Math::ToDegrees(mOwner->GetRot()), nullptr, mRendererFlip);
 	}
 }
 

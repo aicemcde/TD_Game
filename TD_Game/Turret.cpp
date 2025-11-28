@@ -66,7 +66,7 @@ void Turret::AttackTarget(float deltaTime)
 	if (mCurrentEnemy == nullptr) return;
 	mMissileCooldown -= deltaTime;
 	Vector2 dir = mCurrentEnemy->GetPos() - GetPos();
-	float angle = Math::Atan2(dir.y, dir.x);
+	float angle = Math::Atan2(-dir.y, dir.x);
 	SetRot(angle);
 	if (mMissileCooldown <= 0.0f)
 	{
