@@ -40,23 +40,23 @@ void MouseInputComponent::Update(float deltaTime)
 	int indexX = static_cast<int>(mMousePos.x / tileSize.x);
 	int indexY = static_cast<int>(mMousePos.y / tileSize.y);
 
-	if (mLastIndexX != -1 || mLastIndexY != -1)
-	{
-		Data& prevTile = mTileMap[mLastIndexY][mLastIndexX];
-		if (prevTile.mHadTurret)
-		{
-		}
-		else
-		{
-			prevTile.mTileType = TileTypes::NORMALGROUND;
-		}
-	}
+	
 
 	if (IsValidIndex(indexX, indexY))
 	{
 		if (mLastIndexX != indexX || mLastIndexY != indexY)
 		{
-			
+			if (mLastIndexX != -1)
+			{
+				Data& prevTile = mTileMap[mLastIndexY][mLastIndexX];
+				if (prevTile.mHadTurret)
+				{
+				}
+				else if (prevTile.mTileType == TileTypes::SELCTEDNORMALGROUND)
+				{
+					prevTile.mTileType = TileTypes::NORMALGROUND;
+				}
+			}
 			Data& currentTile = mTileMap[indexY][indexX];
 			if (currentTile.mTileType == NORMALGROUND)
 			{
