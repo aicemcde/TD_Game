@@ -138,6 +138,7 @@ void Game::LoadData()
 
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(this);
 	enemy->Initialize(mLevel);
+	mEnemies.emplace_back(enemy.get());
 
 	mScene->AddActor(std::move(enemy));
 	mScene->AddActor(std::move(bgActor));

@@ -10,8 +10,12 @@ public:
 
 	void UpdateActor(float deltaTime) override;
 private:
+	void SearchEnemy();
+	void AttackTarget(float deltaTime);
 	class SpriteComponent* mSprComp = nullptr;
 	class AIComponent* mAIComp = nullptr;
 
 	float mMissileCooldown = 1.0f;
+	class Enemy* mCurrentEnemy = nullptr;
+	float mAttackRange;
 };

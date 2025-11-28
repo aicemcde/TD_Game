@@ -29,6 +29,7 @@ public:
 	void SetTileSize(const Vector2& size) { mTileSize = size; }
 	const GameLevel& GetLevel() const { return mLevel; }
 	void SetLevel(GameLevel level) { mLevel = std::move(level); }
+	const std::vector<class Enemy*>& GetEnemies() const { return mEnemies; }
 private:
 	static Game* sInstance;
 	Vector2 mScreenSize;
@@ -50,7 +51,6 @@ private:
 	std::unique_ptr<class Scene> mScene;
 	std::unique_ptr<class ResourceManager> mResourceManager;
 
-	
-
+	std::vector<class Enemy*> mEnemies;
 	std::vector<class Missile*> mMissiles;
 };
