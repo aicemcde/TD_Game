@@ -1,6 +1,18 @@
 #pragma once
 #include <vector>
 #include "Math.h"
+#include <memory>
+
+using GridData = std::vector<std::vector<int>>;
+
+struct Data	//一マスごとの情報
+{
+	Vector2 mCenterPos = Vector2::Zero;
+	bool mHadTurret = false;
+	int mTileType = -1;
+};
+
+using TileDatas = std::vector<std::vector<Data>>;
 
 struct WeightedGraphNode;
 
@@ -23,22 +35,23 @@ struct WeightedGraphNode
 
 struct WeightedGraph
 {
-	std::vector<WeightedGraphNode> mNodes;
+	std::vector<std::unique_ptr<WeightedGraphNode>> mNodes;
 };
 
-struct GraphNode
-{
-	std::vector<struct GraphNode*> mAdjacentNodes;
-};
-
-struct Graph
-{
-	std::vector<GraphNode> mNodes;
-};
-
-struct GameLevel
+struct GameLevel	//ここでのlevelはマップ、面等の意味
 {
 	WeightedGraph graph;
 	WeightedGraphNode* startNode = nullptr;
 	WeightedGraphNode* goalNode = nullptr;
+};
+
+enum TileTypes
+{
+	NONE = -1,
+	NORMALGROUND = 1,
+	SELCTEDNORMALGROUND = 11,
+	LOAD = 2,
+	START = 100,
+	GOAL = 200,
+	TURRETBASEGROUND = 22
 };

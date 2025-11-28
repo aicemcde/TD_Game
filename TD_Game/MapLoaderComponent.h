@@ -1,19 +1,21 @@
 #pragma once
-#include "Graph_Types.h"
 #include "Component.h"
 #include <string>
-
-using GridData = std::vector<std::vector<int>>;
 
 class MapLoaderComponent : public Component
 {
 public:
-	MapLoaderComponent(class Actor* owner);
-	GameLevel BuildGraphFromGrid(const Vector2& screen);
+	MapLoaderComponent(class Actor* owner, const std::string& fileName);
+	GameLevel BuildGraphFromGrid();
+	TileDatas GetMap() const { return mTileMap; }
+private:
+	using NodeGrid = std::vector<std::vector<WeightedGraphNode*>>;
 
 	void LoadCSV(const std::string& fileName);
-	std::vector<std::vector<int>> GetMap() const { return mTileMap; }
-private:
-	GridData mTileMap;
+	void GenerateNodes(const int height, const int width, const Vector2& tileSize, GameLevel* outLevel, NodeGrid* outNodeGrid);
+	void ConnectEdges(const int height, const int width, const NodeGrid& nodeGrid);
+
+	TileDatas mTileMap;
+	Vector2 mTileSize;
 };
 

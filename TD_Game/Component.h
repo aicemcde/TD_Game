@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include "Graph_Types.h"
 
 class Component
 {

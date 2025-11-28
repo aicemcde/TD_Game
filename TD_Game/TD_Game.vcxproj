@@ -133,6 +133,7 @@
     <ClCompile Include="AIDeath.cpp" />
     <ClCompile Include="AIMove.cpp" />
     <ClCompile Include="AIShot.cpp" />
+    <ClCompile Include="BGActor.cpp" />
     <ClCompile Include="CircleComponent.cpp" />
     <ClCompile Include="Component.cpp" />
     <ClCompile Include="Enemy.cpp" />
@@ -141,6 +142,8 @@
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MapLoaderComponent.cpp" />
     <ClCompile Include="Math.cpp" />
+    <ClCompile Include="Missile.cpp" />
+    <ClCompile Include="MouseInputComponent.cpp" />
     <ClCompile Include="MoveComponent.cpp" />
     <ClCompile Include="NavComponent.cpp" />
     <ClCompile Include="ResourceManger.cpp" />
@@ -157,12 +160,15 @@
     <ClInclude Include="AIMove.h" />
     <ClInclude Include="AIShot.h" />
     <ClInclude Include="AIState.h" />
+    <ClInclude Include="BGActor.h" />
     <ClInclude Include="CircleComponent.h" />
     <ClInclude Include="Component.h" />
     <ClInclude Include="Enemy.h" />
     <ClInclude Include="Game.h" />
     <ClInclude Include="MapLoaderComponent.h" />
     <ClInclude Include="Math.h" />
+    <ClInclude Include="Missile.h" />
+    <ClInclude Include="MouseInputComponent.h" />
     <ClInclude Include="MoveComponent.h" />
     <ClInclude Include="NavComponent.h" />
     <ClInclude Include="ResourceManger.h" />

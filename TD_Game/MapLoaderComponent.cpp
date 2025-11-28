@@ -2,13 +2,14 @@
 #include "SDL.h"
 #include <fstream>
 #include <sstream>
+#include "Game.h"
 
-const int TILE_SIZE = 64;
 const float STRIGHT_COST = 1.0f;	//直線移動コスト(Weight)
 
-MapLoaderComponent::MapLoaderComponent(Actor* owner)
+MapLoaderComponent::MapLoaderComponent(Actor* owner, const std::string& fileName)
 	: Component(owner)
 {
+	LoadCSV(fileName);
 }
 
 void MapLoaderComponent::LoadCSV(const std::string& fileName)
@@ -24,45 +25,52 @@ void MapLoaderComponent::LoadCSV(const std::string& fileName)
 	std::string tilesRowStr;
 	while (std::getline(tileMap, tilesRowStr))
 	{
-		std::vector<int> addTilesRow;
+		std::vector<Data> addTilesRow;
 		std::string tileStr;
 		std::istringstream iss(tilesRowStr);
 
 		while (std::getline(iss, tileStr, ','))
 		{
 			int tile = std::stoi(tileStr);
-			addTilesRow.emplace_back(tile);
+			Data addTile;
+			addTile.mTileType = tile;
+			addTilesRow.emplace_back(addTile);
 		}
 
 		mTileMap.emplace_back(addTilesRow);
 	}
+
+	Vector2 screenSize = Game::Get().GetScreenSize();
+	int height = static_cast<int>(mTileMap.size());
+	int width = static_cast<int>(mTileMap[0].size());
+
+	float tileSize_x = screenSize.x / width;
+	float tileSize_y = screenSize.y / height;
+	mTileSize = Vector2(tileSize_x, tileSize_y);
+	Game::Get().SetTileSize(mTileSize);
 }
 
-GameLevel MapLoaderComponent::BuildGraphFromGrid(const Vector2& screenSize)
+GameLevel MapLoaderComponent::BuildGraphFromGrid()
 {
 	GameLevel level;
 	int height = static_cast<int>(mTileMap.size());
-	if (height == 0)
-	{
-		return level;
-	}
+	if (height == 0) return level;
 	int width = static_cast<int>(mTileMap[0].size());
 
-	int tileSize_x = static_cast<int>(screenSize.x) / width;
-	int tileSize_y = static_cast<int>(screenSize.y) / height;
-	SDL_Log("BuildGraphFromGrid: width=%d, height=%d, tileSize=(%d, %d)", width, height, tileSize_x, tileSize_y);
-	std::vector<std::vector<WeightedGraphNode*>> nodeGrid(height, std::vector<WeightedGraphNode*>(width, nullptr));
+	SDL_Log("BuildGraphFromGrid: width=%d, height=%d, tileSize=(%.1f, %.1f)", width, height, mTileSize.x, mTileSize.y);
+	NodeGrid nodeGrid(height, std::vector<WeightedGraphNode*>(width, nullptr));
 
-	for (int y = 0; y < height; ++y)
+	/*for (int y = 0; y < height; ++y)
 	{
 		for (int x = 0; x < width; ++x)
 		{
-			int tileType = mTileMap[y][x];
+			int tileType = mTileMap[y][x].mTileType;
 			if (tileType != -1 && tileType != 1)
 			{
 				WeightedGraphNode* newNode = new WeightedGraphNode();
 				float posX = static_cast<float>(x * tileSize_x + tileSize_x * 0.5f);	
 				float posY = static_cast<float>(y * tileSize_y + tileSize_y * 0.5f);
+				mTileMap[y][x].mCenterPos = Vector2(posX, posY);
 				newNode->SetPos(Vector2(posX, posY));
 				SDL_Log("Node created at (%.1f, %.1f) for tileType %d", posX, posY, tileType);
 
@@ -75,14 +83,16 @@ GameLevel MapLoaderComponent::BuildGraphFromGrid(const Vector2& screenSize)
 					level.goalNode = newNode;
 				}
 
-				level.graph.mNodes.emplace_back(*newNode);
+				level.graph.mNodes.emplace_back(newNode);
 				nodeGrid[y][x] = newNode;
 			}
 		}
-	}
+	}*/
+
+	GenerateNodes(height, width, mTileSize, &level, &nodeGrid);
 
 	//隣接ノードの設定
-	int dirX[] = { 0,0, -1, 1 };
+	/*int dirX[] = {0,0, -1, 1};
 	int dirY[] = { -1,1, 0, 0 };
 
 	for (int y = 0; y < height; ++y)
@@ -114,6 +124,68 @@ GameLevel MapLoaderComponent::BuildGraphFromGrid(const Vector2& screenSize)
 				}
 			}
 		}
-	}
+	}*/
+	ConnectEdges(height, width, nodeGrid);
 	return level;
+}
+
+void MapLoaderComponent::GenerateNodes(const int height, const int width, const Vector2& tileSize, GameLevel* outLevel, NodeGrid* outNodeGrid)
+{
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			float posX = static_cast<float>(x * tileSize.x + tileSize.x * 0.5f);
+			float posY = static_cast<float>(y * tileSize.y + tileSize.y * 0.5f);
+			mTileMap[y][x].mCenterPos = Vector2(posX, posY);
+
+			int tileType = mTileMap[y][x].mTileType;
+			if (tileType != -1 && tileType != 1)
+			{
+				std::unique_ptr<WeightedGraphNode> newNode = std::make_unique<WeightedGraphNode>();
+				newNode->SetPos(Vector2(posX, posY));
+				
+				WeightedGraphNode* rawNodePtr = newNode.get();
+
+				if (tileType == 100) outLevel->startNode = rawNodePtr;
+				else if (tileType == 200) outLevel->goalNode = rawNodePtr;
+				(*outNodeGrid)[y][x] = rawNodePtr;
+				outLevel->graph.mNodes.emplace_back(std::move(newNode));
+			}
+		}
+	}
+}
+
+void MapLoaderComponent::ConnectEdges(const int height, const int width, const NodeGrid& nodeGrid)
+{
+	int dirX[] = { 0,0, -1, 1 };
+	int dirY[] = { -1,1, 0, 0 };
+
+	for (int y = 0; y < height; ++y)
+	{
+		for (int x = 0; x < width; ++x)
+		{
+			WeightedGraphNode* currentNode = nodeGrid[y][x];
+			if (currentNode == nullptr) continue;
+
+			for (int i = 0; i < 4; ++i)
+			{
+				int nx = x + dirX[i];
+				int ny = y + dirY[i];
+
+				if (nx >= 0 && nx < width && ny >= 0 && ny < height)
+				{
+					WeightedGraphNode* neighborNode = nodeGrid[ny][nx];
+					if (neighborNode != nullptr)
+					{
+						WeightedEdge edge;
+						edge.mFrom = currentNode;
+						edge.mTo = neighborNode;
+						edge.mWeight = STRIGHT_COST;
+						currentNode->mEdges.emplace_back(edge);
+					}
+				}
+			}
+		}
+	}
 }

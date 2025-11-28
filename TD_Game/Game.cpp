@@ -1,12 +1,10 @@
 #include "Game.h"
 #include "Scene.h"
 #include "ResourceManger.h"
-#include "Actor.h"
-#include "TileMapComponent.h"
-#include "MapLoaderComponent.h"
-#include "Math.h"
 #include "Enemy.h"
+#include "BGActor.h"
 
+Game* Game::sInstance = nullptr;
 
 Game::Game()
 	:mWindow(nullptr)
@@ -15,7 +13,8 @@ Game::Game()
 	, mScene(nullptr)
 	, mTicksCount(0)
 {
-
+	if (sInstance == nullptr) sInstance = this;
+	mScreenSize = Vector2(1024.0f, 768.0f);
 }
 
 Game::~Game()
@@ -128,37 +127,21 @@ void Game::GenerateOutput()
 
 void Game::LoadData()
 {
-	Vector2 screenSize(1024.0f, 768.0f);
-	auto temp = std::make_unique<Actor>(this);
-	temp->SetPos(Vector2(512.0f, 384.0f));
+	std::unique_ptr<BGActor> bgActor = std::make_unique<BGActor>(this);
 
-	std::unique_ptr<TileMapComponent> tmc = std::make_unique<TileMapComponent>(temp.get());
-	std::unique_ptr<MapLoaderComponent> mlc = std::make_unique<MapLoaderComponent>(temp.get());
-
-	tmc->SetScreenSize(screenSize);
-	SDL_Texture* tstex = mResourceManager->GetTexture("Assets/TileGreen.png", mRenderer);
-	tmc->SetTileTexture(1, tstex);
-	tstex = mResourceManager->GetTexture("Assets/TileBrown.png", mRenderer);
-	tmc->SetTileTexture(2, tstex);
-	tmc->SetTileTexture(100, tstex);	//START
-	tmc->SetTileTexture(200, tstex);	//GOAL
-	mlc->LoadCSV("Assets/MapLayer.csv");
-	tmc->SetTileMap(mlc->GetMap());
-	level = mlc->BuildGraphFromGrid(screenSize);
-	if (!level.startNode || !level.goalNode)
+	if (!mLevel.startNode || !mLevel.goalNode)
 	{
 		SDL_Log("start goal not exist");
 		Shutdown();
+		return;
 	}
 
 	std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(this);
-	enemy->Initialize(level);
-
+	enemy->Initialize(mLevel);
+	mEnemies.emplace_back(enemy.get());
 
 	mScene->AddActor(std::move(enemy));
-	temp->AddComponent(std::move(tmc));
-	temp->AddComponent(std::move(mlc));
-	mScene->AddActor(std::move(temp));
+	mScene->AddActor(std::move(bgActor));
 }
 
 void Game::UnloadData()
