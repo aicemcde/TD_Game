@@ -6,6 +6,7 @@
 #include "AIComponent.h"
 #include "AIMove.h"
 #include "AIDeath.h"
+#include "CircleComponent.h"
 
 Enemy::Enemy(Game* game)
 	:Actor(game)
@@ -25,6 +26,11 @@ Enemy::Enemy(Game* game)
 
 	aic->ChangeState("Move");
 
+	std::unique_ptr<CircleComponent> cc = std::make_unique<CircleComponent>(this);
+	cc->SetRadius(32.0f);
+	mCComp = cc.get();
+
+	AddComponent(std::move(cc));
 	AddComponent(std::move(aic));
 	AddComponent(std::move(sc));
 	AddComponent(std::move(nc));
