@@ -71,8 +71,7 @@ void Turret::AttackTarget(float deltaTime)
 	if (mMissileCooldown <= 0.0f)
 	{
 		float missileAngle = angle;
-		std::unique_ptr<Missile> mMissile = std::make_unique<Missile>(mGame);
-		mMissile->SetPos(GetPos());
+		std::unique_ptr<Missile> mMissile = std::make_unique<Missile>(mGame, mCurrentEnemy, mCenterPosition);
 		mMissile->SetRot(missileAngle);
 		mGame->GetScene()->AddActor(std::move(mMissile));
 		mMissileCooldown = 1.0f;
