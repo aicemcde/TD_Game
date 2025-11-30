@@ -3,6 +3,7 @@
 #include "ResourceManger.h"
 #include "Enemy.h"
 #include "BGActor.h"
+#include <algorithm>
 
 Game* Game::sInstance = nullptr;
 
@@ -114,6 +115,8 @@ void Game::UpdateGame()
 		deltaTime = 0.05f;
 	}
 
+	TmpGame(deltaTime);
+
 	mScene->Update(deltaTime);
 }
 
@@ -147,4 +150,33 @@ void Game::LoadData()
 void Game::UnloadData()
 {
 	mScene->Unload();
+}
+
+void Game::RemoveEnemy(Enemy* enemy)
+{
+	auto iter = std::find(mEnemies.begin(), mEnemies.end(), enemy);
+	if (iter != mEnemies.end())
+	{
+		std::iter_swap(iter, mEnemies.end() - 1);
+		mEnemies.pop_back();
+	}
+}
+
+void Game::TmpGame(float deltaTime)
+{
+	cooldown -= deltaTime;
+	if (cooldown < 0 && enemyCount < tmpEnemyNum)
+	{
+		std::unique_ptr<Enemy> enemy = std::make_unique<Enemy>(this);
+		enemy->Initialize(mLevel);
+		mEnemies.emplace_back(enemy.get());
+		mScene->AddActor(std::move(enemy));
+		++enemyCount;
+		cooldown = tmpEnemyCooldown;
+	}
+	if (enemyCount == tmpEnemyNum && mEnemies.empty())
+	{
+		Shutdown();
+		return;
+	}
 }

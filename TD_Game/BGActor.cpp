@@ -18,7 +18,7 @@ BGActor::BGActor(Game* game)
 	SDL_Texture* tstex = mGame->GetResourceManager()->GetTexture("Assets/TileGreen.png", mGame->GetRenderer());
 	tmc->SetTileTexture(TileTypes::NORMALGROUND, tstex);
 	tstex = mGame->GetResourceManager()->GetTexture("Assets/TileGreenSelected.png", mGame->GetRenderer());
-	tmc->SetTileTexture(TileTypes::SELCTEDNORMALGROUND, tstex);
+	tmc->SetTileTexture(TileTypes::SELECTEDNORMALGROUND, tstex);
 	tstex = mGame->GetResourceManager()->GetTexture("Assets/TileGrey.png", mGame->GetRenderer());
 	tmc->SetTileTexture(TileTypes::TURRETBASEGROUND, tstex);
 	tstex = mGame->GetResourceManager()->GetTexture("Assets/TileBrown.png", mGame->GetRenderer());

@@ -6,6 +6,7 @@ class Enemy : public Actor
 {
 public:
 	Enemy(class Game* game);
+	~Enemy();
 	void Initialize(const GameLevel& level);
 	void UpdateActor(float deltaTime) override;
 	class SpriteComponent* GetSprite() const { return mSprComp; }

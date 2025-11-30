@@ -48,7 +48,7 @@ void NavComponent::SetPath(const GameLevel& level)
 
 	for (auto& node : mPath)
 	{
-		mWayPointsPos.emplace_back(node->GetPos());
+		mWayPointsPos.emplace_back(node->mPos);
 	}
 
 	mNumWayPoints = static_cast<int>(mWayPointsPos.size());

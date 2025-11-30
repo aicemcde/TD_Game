@@ -7,7 +7,7 @@ class MapLoaderComponent : public Component
 public:
 	MapLoaderComponent(class Actor* owner, const std::string& fileName);
 	GameLevel BuildGraphFromGrid();
-	TileDatas GetMap() const { return mTileMap; }
+	TileMapData GetMap() const { return mTileMap; }
 private:
 	using NodeGrid = std::vector<std::vector<WeightedGraphNode*>>;
 
@@ -15,7 +15,7 @@ private:
 	void GenerateNodes(const int height, const int width, const Vector2& tileSize, GameLevel* outLevel, NodeGrid* outNodeGrid);
 	void ConnectEdges(const int height, const int width, const NodeGrid& nodeGrid);
 
-	TileDatas mTileMap;
+	TileMapData mTileMap;
 	Vector2 mTileSize;
 };
 

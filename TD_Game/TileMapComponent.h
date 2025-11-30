@@ -11,12 +11,12 @@ public:
 	TileMapComponent(class Actor* owner, int updateOrder = 10);
 	void Update(float deltaTIme) override;
 	void Draw(SDL_Renderer* renderer) override;
-	void SetTileMap(const TileDatas& tileMap) { mTileMap = tileMap; }
+	void SetTileMap(const TileMapData& tileMap) { mTileMap = tileMap; }
 	
-	TileDatas GetTileMap() const { return mTileMap; }
+	TileMapData GetTileMap() const { return mTileMap; }
 	void SetTileTexture(int tileID, SDL_Texture* texture) { mTileTextures[tileID] = texture; }
 
 private:
-	TileDatas mTileMap;
+	TileMapData mTileMap;
 	std::unordered_map<int, SDL_Texture*> mTileTextures;
 };
