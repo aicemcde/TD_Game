@@ -4,7 +4,7 @@
 #include "Turret.h"
 #include "Scene.h"
 
-MouseInputComponent::MouseInputComponent(Actor* owner, const TileDatas& map)
+MouseInputComponent::MouseInputComponent(Actor* owner, const TileMapData& map)
 	:Component(owner)
 	,mTileMap(map)
 {
@@ -52,7 +52,7 @@ void MouseInputComponent::Update(float deltaTime)
 				if (prevTile.mHadTurret)
 				{
 				}
-				else if (prevTile.mTileType == TileTypes::SELCTEDNORMALGROUND)
+				else if (prevTile.mTileType == TileTypes::SELECTEDNORMALGROUND)
 				{
 					prevTile.mTileType = TileTypes::NORMALGROUND;
 				}
@@ -60,7 +60,7 @@ void MouseInputComponent::Update(float deltaTime)
 			Data& currentTile = mTileMap[indexY][indexX];
 			if (currentTile.mTileType == NORMALGROUND)
 			{
-				currentTile.mTileType = TileTypes::SELCTEDNORMALGROUND;
+				currentTile.mTileType = TileTypes::SELECTEDNORMALGROUND;
 			}
 			mLastIndexX = indexX;
 			mLastIndexY = indexY;
@@ -69,7 +69,7 @@ void MouseInputComponent::Update(float deltaTime)
 		if (mIsDownMouse)
 		{
 			Data& currentTile = mTileMap[indexY][indexX];
-			if (currentTile.mTileType == TileTypes::SELCTEDNORMALGROUND || currentTile.mTileType == TileTypes::NORMALGROUND)
+			if (currentTile.mTileType == TileTypes::SELECTEDNORMALGROUND || currentTile.mTileType == TileTypes::NORMALGROUND)
 			{
 				currentTile.mTileType = TileTypes::TURRETBASEGROUND;
 				currentTile.mHadTurret = true;

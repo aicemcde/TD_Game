@@ -30,6 +30,10 @@ public:
 	const GameLevel& GetLevel() const { return mLevel; }
 	void SetLevel(GameLevel level) { mLevel = std::move(level); }
 	const std::vector<class Enemy*>& GetEnemies() const { return mEnemies; }
+
+	void RemoveEnemy(class Enemy* enemy);
+
+	void TmpGame(float deltaTime);
 private:
 	static Game* sInstance;
 	Vector2 mScreenSize;
@@ -53,4 +57,9 @@ private:
 
 	std::vector<class Enemy*> mEnemies;
 	std::vector<class Missile*> mMissiles;
+
+	const int tmpEnemyNum = 10;
+	const float tmpEnemyCooldown = 3.00f;
+	float cooldown = tmpEnemyCooldown;
+	int enemyCount = 1;
 };

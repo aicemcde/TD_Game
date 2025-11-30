@@ -63,7 +63,7 @@ namespace PathFinding
 			{
 				std::vector<const WeightedGraphNode*> path;
 				const WeightedGraphNode* curr = goalNode;
-				while (curr != startNode || curr != nullptr)
+				while (curr != startNode && curr != nullptr)
 				{
 					path.emplace_back(curr);
 					const WeightedEdge* parentEdge = nodeMap[curr].mParentEdge;		//親のエッジ(線)を取得
@@ -111,13 +111,13 @@ namespace PathFinding
 		}
 
 		// ループを抜けた場合、経路が見つからなかったので空のパスを返す
-		SDL_Log("goal not rearched");
+		SDL_Log("goal not reached");
 		return {};
 	}
 
-	float ComputeHeuristic(const WeightedGraphNode* mTo, const WeightedGraphNode* goalNode)
+	float ComputeHeuristic(const WeightedGraphNode* mFrom, const WeightedGraphNode* goalNode)
 	{
-		Vector2 diff = goalNode->GetPos() - mTo->GetPos();
+		Vector2 diff = goalNode->mPos - mFrom->mPos;
 		return diff.Length();
 	}
 }

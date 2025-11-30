@@ -12,7 +12,7 @@ struct Data	//àÍÉ}ÉXÇ≤Ç∆ÇÃèÓïÒ
 	int mTileType = -1;
 };
 
-using TileDatas = std::vector<std::vector<Data>>;
+using TileMapData = std::vector<std::vector<Data>>;
 
 struct WeightedGraphNode;
 
@@ -27,10 +27,7 @@ struct WeightedEdge
 struct WeightedGraphNode
 {
 	std::vector<WeightedEdge> mEdges;
-
 	Vector2 mPos;
-	void SetPos(const Vector2& pos) { mPos = pos; }
-	Vector2 GetPos() const { return mPos; }
 };
 
 struct WeightedGraph
@@ -49,7 +46,7 @@ enum TileTypes
 {
 	NONE = -1,
 	NORMALGROUND = 1,
-	SELCTEDNORMALGROUND = 11,
+	SELECTEDNORMALGROUND = 11,
 	LOAD = 2,
 	START = 100,
 	GOAL = 200,

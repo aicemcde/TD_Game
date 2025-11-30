@@ -9,9 +9,9 @@ CircleComponent::CircleComponent(Actor* owner)
 		this, owner, GetOwner());
 }
 
-const Vector2& CircleComponent::GetCenter() const
+Vector2 CircleComponent::GetCenter() const
 {
-	SDL_assert(mOwner == nullptr);
+	SDL_assert(mOwner != nullptr);
 	return mOwner->GetPos();
 }
 

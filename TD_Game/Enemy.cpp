@@ -36,6 +36,11 @@ Enemy::Enemy(Game* game)
 	AddComponent(std::move(nc));
 }
 
+Enemy::~Enemy()
+{
+	Game::Get().RemoveEnemy(this);
+}
+
 void Enemy::Initialize(const GameLevel& level)
 {
 	mNavComp->SetPath(level);

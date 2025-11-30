@@ -11,5 +11,5 @@ private:
 	class MouseInputComponent* mMIComp = nullptr;
 	class TileMapComponent* mTMComp = nullptr;
 	GameLevel mLevel;
-	TileDatas mTileMap;
+	TileMapData mTileMap;
 };
